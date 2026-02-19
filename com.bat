@@ -22,7 +22,7 @@ if errorlevel 1 (
 
 REM Executa o script com Streamlit
 echo Iniciando o app...
-streamlit run comer.py
+streamlit run agenda.py
 
 REM Mantém a janela aberta
 echo.
