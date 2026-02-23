@@ -22,7 +22,7 @@ if errorlevel 1 (
 
 REM Executa o script com Streamlit
 echo Iniciando o app...
-streamlit run Oi.py
+streamlit run belas_st.py
 
 REM Mantém a janela aberta
 echo.

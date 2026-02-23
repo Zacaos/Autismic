@@ -1,34 +1,40 @@
 import streamlit as st
-import time
+import pandas as pd
 
-st.set_page_config(page_title="Pedir Comida", page_icon="🍽️", layout="centered")
+# Definição de recursos e meses
+recursos = ["Cluster GKE", "Big Table", "Cloud Composer", 
+            "Applications (nulls)", "Notebooks EDA", 
+            "Big Query", "Cloud Storage"]
 
-st.title("🍽️ Pedir comida!")
+meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", 
+         "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
 
-# Estilo para botão grande
-st.markdown("""
-    <style>
-    div.stButton > button {
-        height: 3em;
-        width: 100%;
-        font-size: 24px;
-        font-weight: bold;
-        border-radius: 10px;
-        margin: 1em 0;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# Criação de dataframe vazio
+df = pd.DataFrame(index=recursos, columns=meses)
 
-# Função para animar "Oi" subindo
-def animar_oi():
-    st.markdown("Muito bem, vamos almoçar...")
-    placeholder = st.empty()
-    for i in range(10, 0, -1):
-        placeholder.markdown(f"<h1 style='text-align:center; color:rgb({255-i*20},{i*20},255); font-size:{30+i*5}px;'>Vamos comer 🍽️</h1>", unsafe_allow_html=True)
-        time.sleep(0.1)
-    placeholder.markdown("<h1 style='text-align:center; color:#FF69B4; font-size:60px;'>Vamos comer 🍽️</h1>", unsafe_allow_html=True)
-    st.success("Muito bem Parabéns! 🌈")
+st.title("Relatório Forecast - Cost Manager")
 
-# Botão para acionar a animação
-if st.button("Quero Comer 🎈"):
-    animar_oi()
+# Input manual dos custos
+for recurso in recursos:
+    for mes in meses:
+        valor = st.text_input(f"Custo {recurso} - {mes}", "0")
+        df.loc[recurso, mes] = float(valor)
+
+# Cálculo de médias trimestrais
+trimestres = {
+    "Q1": ["Jan", "Fev", "Mar"],
+    "Q2": ["Abr", "Mai", "Jun"],
+    "Q3": ["Jul", "Ago", "Set"],
+    "Q4": ["Out", "Nov", "Dez"]
+}
+
+for q, meses_q in trimestres.items():
+    df[q] = df[meses_q].astype(float).mean(axis=1)
+
+# Ajustes de uso compartilhado
+df.loc["Big Table"] = df.loc["Big Table"].astype(float) * (1/3)
+df.loc["Cluster GKE"] = df.loc["Cluster GKE"].astype(float) * (1/2)
+
+# Exportação CSV
+csv = df.to_csv().encode("utf-8")
+st.download_button("Baixar Relatório CSV", csv, "forecast_cost_manager.csv", "text/csv")
