@@ -57,25 +57,15 @@ menu = st.sidebar.radio(
     ["Home", "Clientes", "Serviços", "Estoque", "Financeiro", "Agenda", "Cupom Fiscal"]
 )
 
-# ===== FUNÇÃO PARA MOSTRAR LOGO =====
-def mostrar_logo():
-    st.markdown(
-        """
-        <div style="text-align: center;">
-            <img src="logo.jpeg" width="400">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 # ===== PÁGINAS =====
 if menu == "Home":
-    mostrar_logo()
+    
     st.markdown("<h1 style='text-align:center;color:#C71585;'>Versatis Beauty</h1>", unsafe_allow_html=True)
     st.info("Selecione opções no menu lateral.")
 
 elif menu == "Clientes":
-    mostrar_logo()
+    
     st.header("👩‍🦰 Cadastro de Clientes")
     nome = st.text_input("Nome")
     telefone = st.text_input("Telefone")
